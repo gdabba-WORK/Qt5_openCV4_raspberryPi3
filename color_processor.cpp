@@ -1,49 +1,70 @@
-#include "processor.hpp"
+#include "color_processor.hpp"
 
-Processor::Processor(QObject *parent)
-    : QThread(parent)
+void Color::run()
 {
-    cout << "Processor Obejct Created!" << endl;
-}
-
-Processor::~Processor()
-{
-    cout << "Processor Object deleted!" << endl;
-}
-
-void Processor::run()
-{
-    cout << "Processing::run() excuted!" << endl;
-    int step = 0;
-    CV_Assert(capture.isOpened());
-
-    while (capture.isOpened())
+    cout << "Color::run() excuted!" << endl;
+//    int step = 0;
+    while(capture.isOpened())
     {
         display();
-        cout << ++step << "setps" << endl;
+//        cout << ++step << "setps" << endl;
     }
 }
 
-Mat& Processor::getFrame()
+Color::Color(QObject *parent)
+    : QThread(parent),
+      isRecord(false)
+{
+    cout << "Color Obejct Created!" << endl;
+}
+
+Color::~Color()
+{
+    cout << "Color Object deleted!" << endl;
+}
+
+Mat& Color::getFrame()
 {
     return frame;
 }
 
-VideoCapture& Processor::getCapture()
+VideoCapture& Color::getCapture()
 {
     return capture;
 }
 
-VideoWriter& Processor::getWriter()
+void Color::setFlag(enum category value)
 {
-    return writer;
+    flag = value;
 }
 
-void Processor::display()
+void Color::setIsRecord(bool value)
 {
-//    capture.set(CAP_PROP_FRAME_WIDTH, 640);
-//    capture.set(CAP_PROP_FRAME_HEIGHT, 360);
-    capture.read(frame);
+    isRecord = value;
+}
+
+void Color::cameraOn()
+{
+    if (!capture.isOpened())
+    {
+        capture.open(0);
+//        capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+//        capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+        cout << capture.get(CV_CAP_PROP_FRAME_WIDTH) << endl;
+        cout << capture.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
+    }
+    CV_Assert(capture.isOpened());
+}
+void Color::cameraOff()
+{
+    if (capture.isOpened())
+        capture.release();
+    CV_Assert(!capture.isOpened());
+}
+
+void Color::display()
+{
+    capture >> frame;
     if (!frame.empty())
     {
         if (flag == DEFAULT);
@@ -56,34 +77,16 @@ void Processor::display()
                     frame.rows,
                     frame.step,
                     QImage::Format_RGB888);
+        const QPixmap a = QPixmap::fromImage(qimg.rgbSwapped());
 
-        emit resultReady(QPixmap::fromImage(qimg.rgbSwapped()));
+        emit pixmapReady(QPixmap::fromImage(qimg.rgbSwapped()));
+        if (isRecord){
+            emit frameReady(qimg.scaled(640, 480, Qt::KeepAspectRatio));
+        }
     }
 }
 
-void Processor::setFlag(enum category num)
-{
-    flag = num;
-}
-
-void Processor::cameraOn()
-{
-    if (!capture.isOpened())
-    {
-        capture.open(0);
-//        capture.set(CV_CAP_PROP_FRAME_WIDTH, 640);
-//        capture.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
-        cout << capture.get(CV_CAP_PROP_FRAME_WIDTH) << endl;
-        cout << capture.get(CV_CAP_PROP_FRAME_HEIGHT) << endl;
-    }
-}
-void Processor::cameraOff()
-{
-    if (capture.isOpened())
-        capture.release();
-}
-
-void Processor::splitToRGB()
+void Color::splitToRGB()
 {
     //    double frame_rate = capture.get(CV_CAP_PROP_FPS);
     //    int delay = cvRound(1000 / frame_rate);
@@ -108,29 +111,5 @@ void Processor::splitToRGB()
         zero.copyTo(bgr[0]);
         zero.copyTo(bgr[1]);
         merge(bgr, 3, frame);
-    }
-}
-
-void Processor::record()
-{
-    CV_Assert(capture.isOpened());
-    double frame_rate = capture.get(CV_CAP_PROP_FPS);
-    int delay = cvRound(1000 / frame_rate);
-    Size size(640, 360);
-    int  fourcc = VideoWriter::fourcc('D', 'X', '5', '0');
-
-    capture.set(CAP_PROP_FRAME_WIDTH, size.width);
-    capture.set(CAP_PROP_FRAME_HEIGHT, size.height);
-
-
-    writer.open("video_file.avi", fourcc, frame_rate, size);
-    CV_Assert(writer.isOpened());
-
-
-    while(true) {
-        capture >> frame;
-        writer << frame;
-        //        imshow("RECORD", frame);
-        if (waitKey(delay) >= 0) break;
     }
 }

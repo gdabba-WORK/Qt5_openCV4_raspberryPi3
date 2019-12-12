@@ -1,56 +1,42 @@
-#ifndef IMAGEPROCESSING_HPP
-#define IMAGEPROCESSING_HPP
-#include <opencv2/opencv.hpp>
-#include <opencv2/videoio/legacy/constants_c.h>
-#include <opencv2/imgproc/types_c.h>
-#include <opencv2/core/hal/interface.h>
-#include <QThread>
-#include <QObject>
-#include <QMainWindow>
-#include <QMainWindow>
-#include <QDebug>
-#include <QGraphicsScene>
-#include <QGraphicsPixmapItem>
-#include <QImage>
-#include <QPixmap>
-#include <QCloseEvent>
-#include <QMessageBox>
-#include "macro_types.hpp"
-#include <QString>
+#ifndef COLOR_PROCESSOR_HPP
+#define COLOR_PROCESSOR_HPP
 
+#include "includes.hpp"
 using namespace cv;
 using namespace std;
 
-class Processor : public QThread
+class Color : public QThread
 {
     Q_OBJECT
 
 private:
     VideoCapture capture;
-    VideoWriter  writer;
     Mat frame;
+public:
     enum category flag;
+    bool isRecord;
 
 private:
     void run() override;
 
 public:
-    Processor(QObject *parent = nullptr);
-    ~Processor() override;
+    Color(QObject *parent = nullptr);
+    ~Color() override;
 
     Mat& getFrame();
     VideoCapture& getCapture();
-    VideoWriter& getWriter();
 
     void setFlag(enum category);
+    void setIsRecord(bool);
+
     void cameraOn();
     void cameraOff();
     void display();
     void splitToRGB();
-    void record();
 
 signals:
-    void resultReady(const QPixmap& result);
+    void pixmapReady(const QPixmap& result);
+    void frameReady(const QImage& result);
 
 };
-#endif // IMAGEPROCESSING_HPP
+#endif // COLOR_PROCESSOR_HPP

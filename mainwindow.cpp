@@ -2,38 +2,40 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow), proc(new Processor)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow), color(new Color), storage(new Storage), adjust(new Adjust)
 {
     cout << "Mainwindow constructor start!" << endl;
     ui->setupUi(this);
 
     ui->graphicsView->setScene(new QGraphicsScene(this));
     ui->graphicsView->scene()->addItem(&pixmap);
-//    ui->graphicsView->fitInView(&pixmap, Qt::KeepAspectRatio);
-    connect(proc, &Processor::resultReady, this, &MainWindow::handleResult);
-//    proc->start();
+
+    connect(color, &Color::pixmapReady, this, &MainWindow::handlePixmap);
+    connect(color, &Color::frameReady, storage, &Storage::handleFrame);
+//    connect(color, &Color::finished, color, &QObject::deleteLater);
+//    connect(storage, &Storage::finished, storage, &QObject::deleteLater);
 }
 
 MainWindow::~MainWindow()
 {
     cout << "Mainwindow destructor start!" << endl;
     delete ui;
-    while ( proc->isRunning() ) {
-        std::cout << "Thread proc is running" << std::endl;
-        proc->cameraOff();
+    while ( color->isRunning() ) {
+        std::cout << "Thread color is running" << std::endl;
+        color->cameraOff();
     }
-    delete proc;
+    delete color;
 }
 
-Processor* MainWindow::getProc()
+Color* MainWindow::getColor()
 {
-    return proc;
+    return color;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    if(proc->getCapture().isOpened())
+    if(color->getCapture().isOpened())
     {
         QMessageBox::warning(this,
                              "Warning",
@@ -46,7 +48,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::handleResult(const QPixmap& result)
+void MainWindow::handlePixmap(const QPixmap& result)
 {
     pixmap.setPixmap(result);
     ui->graphicsView->fitInView(&pixmap, Qt::KeepAspectRatio);
@@ -55,12 +57,12 @@ void MainWindow::handleResult(const QPixmap& result)
 void MainWindow::on_btn_default_clicked()
 {
 //    qApp->processEvents();
-    proc->setFlag(DEFAULT);
+    color->setFlag(DEFAULT);
 }
 
 void MainWindow::on_btn_red_clicked()
 {
-    proc->setFlag(RED);
+    color->setFlag(RED);
 //    getProc().cameraOn();
 //    getProc().splitToRGB(2);
 //    Mat frame = getProc().getFrame();
@@ -82,28 +84,46 @@ void MainWindow::on_btn_red_clicked()
 
 void MainWindow::on_btn_green_clicked()
 {
-    proc->setFlag(GREEN);
+    color->setFlag(GREEN);
 }
 
 void MainWindow::on_btn_blue_clicked()
 {
-    proc->setFlag(BLUE);
+    color->setFlag(BLUE);
 }
 
-void MainWindow::on_btn_OnOff_clicked()
+void MainWindow::on_btn_cam_clicked()
 {
-    if (ui->btn_OnOff->text().toStdString() == "CamOn")
+    if (ui->btn_cam->text().toStdString() == "Cam-On")
     {
-        proc->cameraOn();
-        ui->btn_OnOff->setText("CamOff");
-        proc->start();
+        color->cameraOn();
+        color->start();
+        ui->btn_cam->setText("Cam-Off");
+    }
+    else if(ui->btn_record->text().toStdString() == "Record-On")
+    {
+        color->cameraOff();
+        ui->btn_cam->setText("Cam-On");
+    }
+}
+
+void MainWindow::on_btn_record_clicked()
+{
+    if (ui->btn_cam->text().toStdString() == "Cam-On")
+        return;
+
+    if (ui->btn_record->text().toStdString() == "Record-On")
+    {
+        // 아래 start(), recorderOn() 순서 중요
+        storage->recorderOn();
+        storage->start();
+        color->setIsRecord(true);
+        ui->btn_record->setText("Record-Off");
     }
     else
     {
-        proc->cameraOff();
-        ui->btn_OnOff->setText("CamOn");
+        color->setIsRecord(false);
+        storage->recorderOff();
+        ui->btn_record->setText("Record-On");
     }
 }
-
-
-

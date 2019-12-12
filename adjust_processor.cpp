@@ -1,6 +1,6 @@
-#include "adjust_processor.h"
+#include "adjust_processor.hpp"
 
-adjust_processor::adjust_processor()
+Adjust::Adjust()
 {
 
 }

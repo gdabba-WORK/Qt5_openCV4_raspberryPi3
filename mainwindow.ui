@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>927</width>
-    <height>487</height>
+    <width>857</width>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,26 +24,26 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="btn_OnOff">
+   <widget class="QPushButton" name="btn_cam">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>380</y>
+      <x>410</x>
+      <y>360</y>
       <width>89</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>CamOn</string>
+     <string>Cam-On</string>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>10</y>
-      <width>421</width>
-      <height>341</height>
+      <x>20</x>
+      <y>400</y>
+      <width>881</width>
+      <height>211</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -56,8 +56,8 @@
      <widget class="QPushButton" name="btn_red">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>40</y>
+        <x>20</x>
+        <y>0</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -69,8 +69,8 @@
      <widget class="QPushButton" name="btn_green">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>90</y>
+        <x>20</x>
+        <y>50</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -82,8 +82,8 @@
      <widget class="QPushButton" name="btn_blue">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>140</y>
+        <x>20</x>
+        <y>100</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -95,8 +95,8 @@
      <widget class="QPushButton" name="btn_default">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>190</y>
+        <x>20</x>
+        <y>150</y>
         <width>89</width>
         <height>25</height>
        </rect>
@@ -115,20 +115,33 @@
      <attribute name="title">
       <string>Storage</string>
      </attribute>
+     <widget class="QPushButton" name="btn_record">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>60</y>
+        <width>141</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Record-On</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>927</width>
+     <width>857</width>
      <height>22</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

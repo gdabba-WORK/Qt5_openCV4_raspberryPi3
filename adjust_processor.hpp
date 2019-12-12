@@ -1,11 +1,11 @@
-#ifndef ADJUST_PROCESSOR_H
-#define ADJUST_PROCESSOR_H
+#ifndef ADJUST_PROCESSOR_HPP
+#define ADJUST_PROCESSOR_HPP
 
-
-class adjust_processor
+#include "includes.hpp"
+class Adjust : public QThread
 {
 public:
-    adjust_processor();
+    Adjust();
 };
 
-#endif // ADJUST_PROCESSOR_H
+#endif // ADJUST_PROCESSOR_HPP

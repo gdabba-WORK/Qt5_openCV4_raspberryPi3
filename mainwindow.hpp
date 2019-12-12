@@ -1,7 +1,7 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOW_HPP
+#define MAINWINDOW_HPP
 
-#include "processor.hpp"
+#include "includes.hpp"
 
 
 QT_BEGIN_NAMESPACE
@@ -14,26 +14,29 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    Processor* proc;
+    Color* color;
+    Storage* storage;
+    Adjust* adjust;
     QGraphicsPixmapItem pixmap;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    Processor* getProc();
+    Color* getColor();
 
 
 protected:
     void closeEvent(QCloseEvent *event);
 
-private slots:
-    void handleResult(const QPixmap& result);
+public slots:
+    void handlePixmap(const QPixmap& result);
 
 private slots:
     void on_btn_default_clicked();
     void on_btn_red_clicked();
     void on_btn_green_clicked();
     void on_btn_blue_clicked();
-    void on_btn_OnOff_clicked();
+    void on_btn_cam_clicked();
+    void on_btn_record_clicked();
 };
-#endif // MAINWINDOW_H
+#endif // MAINWINDOW_HPP

@@ -20,14 +20,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    adjust_processor.cpp \
+    color_processor.cpp \
     main.cpp \
     mainwindow.cpp \
-    processor.cpp
+    storage_processor.cpp
 
 HEADERS += \
+    adjust_processor.hpp \
+    color_processor.hpp \
+    includes.hpp \
     macro_types.hpp \
     mainwindow.hpp \
-    processor.hpp
+    storage_processor.hpp
 
 FORMS += \
     mainwindow.ui
