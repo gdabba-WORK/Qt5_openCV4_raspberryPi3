@@ -18,6 +18,7 @@ private:
     Storage* storage;
     Adjust* adjust;
     QGraphicsPixmapItem pixmap;
+    int prev1, prev2;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -36,7 +37,12 @@ private slots:
     void on_btn_red_clicked();
     void on_btn_green_clicked();
     void on_btn_blue_clicked();
+    void on_btn_redgreen_clicked();
+    void on_btn_redblue_clicked();
+    void on_btn_greenblue_clicked();
     void on_btn_cam_clicked();
     void on_btn_record_clicked();
+    void on_horizontalSlider_valueChanged(int value);
+    void on_horizontalScrollBar_valueChanged(int value);
 };
 #endif // MAINWINDOW_HPP

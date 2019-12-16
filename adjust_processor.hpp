@@ -4,6 +4,7 @@
 #include "includes.hpp"
 class Adjust : public QThread
 {
+    Q_OBJECT
 public:
     Adjust();
 };

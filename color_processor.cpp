@@ -77,9 +77,10 @@ void Color::display()
                     frame.rows,
                     frame.step,
                     QImage::Format_RGB888);
-        const QPixmap a = QPixmap::fromImage(qimg.rgbSwapped());
+//        const QPixmap a = QPixmap::fromImage(qimg.rgbSwapped());
 
         emit pixmapReady(QPixmap::fromImage(qimg.rgbSwapped()));
+
         if (isRecord){
             emit frameReady(qimg.scaled(640, 480, Qt::KeepAspectRatio));
         }
@@ -91,8 +92,6 @@ void Color::splitToRGB()
     //    double frame_rate = capture.get(CV_CAP_PROP_FPS);
     //    int delay = cvRound(1000 / frame_rate);
     Size_<double> video_size(capture.get(CV_CAP_PROP_FRAME_WIDTH), capture.get(CV_CAP_PROP_FRAME_HEIGHT));
-
-    Mat bgr[3], zero;
     zero = Mat::zeros(video_size, CV_8UC1);
 
     split(frame, bgr);
@@ -111,5 +110,17 @@ void Color::splitToRGB()
         zero.copyTo(bgr[0]);
         zero.copyTo(bgr[1]);
         merge(bgr, 3, frame);
+    case RED_GREEN :
+        zero.copyTo(bgr[0]);
+        merge(bgr, 3, frame);
+        break;
+    case RED_BLUE :
+        zero.copyTo(bgr[1]);
+        merge(bgr, 3, frame);
+        break;
+    case GREEN_BLUE :
+        zero.copyTo(bgr[2]);
+        merge(bgr, 3, frame);
     }
+
 }

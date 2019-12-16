@@ -11,7 +11,7 @@ class Color : public QThread
 
 private:
     VideoCapture capture;
-    Mat frame;
+    Mat frame, bgr[3], zero;
 public:
     enum category flag;
     bool isRecord;

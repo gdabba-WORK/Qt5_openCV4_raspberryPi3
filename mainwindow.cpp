@@ -3,7 +3,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui(new Ui::MainWindow), color(new Color), storage(new Storage), adjust(new Adjust)
+      ui(new Ui::MainWindow), color(new Color), storage(new Storage), adjust(new Adjust),
+      prev1(0), prev2(0)
 {
     cout << "Mainwindow constructor start!" << endl;
     ui->setupUi(this);
@@ -92,6 +93,21 @@ void MainWindow::on_btn_blue_clicked()
     color->setFlag(BLUE);
 }
 
+void MainWindow::on_btn_redgreen_clicked()
+{
+    color->setFlag(RED_GREEN);
+}
+
+void MainWindow::on_btn_redblue_clicked()
+{
+    color->setFlag(RED_BLUE);
+}
+
+void MainWindow::on_btn_greenblue_clicked()
+{
+    color->setFlag(GREEN_BLUE);
+}
+
 void MainWindow::on_btn_cam_clicked()
 {
     if (ui->btn_cam->text().toStdString() == "Cam-On")
@@ -114,7 +130,6 @@ void MainWindow::on_btn_record_clicked()
 
     if (ui->btn_record->text().toStdString() == "Record-On")
     {
-        // 아래 start(), recorderOn() 순서 중요
         storage->recorderOn();
         storage->start();
         color->setIsRecord(true);
@@ -127,3 +142,16 @@ void MainWindow::on_btn_record_clicked()
         ui->btn_record->setText("Record-On");
     }
 }
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    ui->graphicsView->rotate(value-prev1);
+    prev1 = value;
+}
+
+void MainWindow::on_horizontalScrollBar_valueChanged(int value)
+{
+    ui->graphicsView->move(value, 10);
+}
+
+
